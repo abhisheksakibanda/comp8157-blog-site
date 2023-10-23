@@ -36,12 +36,16 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="loginUsername">Username</label>
                                     <input class="form-control" id="loginUsername" placeholder="Enter your username"
-                                           type="text">
+                                           type="text" required>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="loginPassword">Password</label>
                                     <input class="form-control" id="loginPassword" placeholder="Enter your password"
-                                           type="password">
+                                           type="password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-text text-danger" id="loginError" style="display: none;">
+                                    </div>
                                 </div>
                                 <button class="btn btn-primary" id="loginButton" type="submit">Login</button>
                             </form>
@@ -51,6 +55,11 @@
                         <div aria-labelledby="register-tab" class="tab-pane fade" id="register" role="tabpanel">
                             <h5 class="card-title">Register</h5>
                             <form id="regForm">
+                                <div class="mb-3">
+                                    <label class="form-label" for="regEmail">Email</label>
+                                    <input class="form-control" id="regEmail" placeholder="Enter your email"
+                                           type="email">
+                                </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="regUsername">Username</label>
                                     <input class="form-control" id="regUsername" placeholder="Choose a username"
@@ -62,9 +71,14 @@
                                            type="password">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label" for="regEmail">Email</label>
-                                    <input class="form-control" id="regEmail" placeholder="Enter your email"
-                                           type="email">
+                                    <label class="form-label" for="regConfirmPassword">Password</label>
+                                    <input class="form-control" id="regConfirmPassword"
+                                           placeholder="Enter your password again"
+                                           type="password">
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-text text-danger" id="registrationError" style="display: none;">
+                                    </div>
                                 </div>
                                 <button class="btn btn-success" id="registerButton" type="submit">Register</button>
                             </form>

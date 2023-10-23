@@ -34,6 +34,9 @@ def add_user(user: dict):
 def get_user_details(username: str):
     user_credentials = db_client.User.find_one({'username': username})
 
+    if not user_credentials:
+        raise HTTPException(status_code=404, detail="User not found")
+
     return User(
         id=str(user_credentials.get("_id")),
         username=user_credentials.get('username'),

@@ -9,6 +9,9 @@ from blogger.repository import repository
 
 
 def add_user(user_details: User):
+    username_exists = repository.get_user_details(username=user_details.username)
+    if username_exists:
+        raise HTTPException(status_code=400, detail="Username already exists")
     user = create_user(user_details)
     return repository.add_user(user.model_dump())
 
@@ -35,7 +38,7 @@ def authenticate_user(user_credentials: UserCredentials):
             registered_on=retrieved_user.registered_on
         )
 
-    raise HTTPException(status_code=401, detail="Login failed")
+    raise HTTPException(status_code=401, detail="Invalid Credentials")
 
 
 def post_blog(blog_details: BlogPost):

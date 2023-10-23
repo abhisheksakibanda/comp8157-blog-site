@@ -4,8 +4,20 @@ if (document.body.contains(loginForm)) {
     document.getElementById('loginButton').addEventListener('click', event => {
         event.preventDefault();
 
+        const formMessage = document.getElementById('loginError');
+
+        if (loginForm.checkValidity() === false) {
+            loginForm.classList.add('was-validated');
+            formMessage.textContent = "Please fill out all fields";
+            formMessage.style.display = "block";
+            return;
+        }
+
+        loginForm.classList.remove('was-validated');
+        formMessage.textContent = "";
+        formMessage.style.display = "none";
+
         const username = document.getElementById('loginUsername').value;
-        localStorage.setItem("username", username);
         const password = document.getElementById('loginPassword').value;
 
         const data = {
@@ -24,6 +36,7 @@ if (document.body.contains(loginForm)) {
                 response.json().then(data => {
                     let userId = data["id"];
                     console.log(userId);
+                    localStorage.setItem("username", username);
                     localStorage.setItem("userId", userId);
                     console.log("User authenticated successfully");
                     window.location.replace("http://localhost:8080/blogs.html");
@@ -31,7 +44,10 @@ if (document.body.contains(loginForm)) {
             } else {
                 // Login failed
                 console.error('User authentication failed.');
-                // You can display an error message or handle the error accordingly.
+                response.json().then(data => {
+                    formMessage.textContent = data["detail"];
+                    formMessage.style.display = "block";
+                });
             }
         }).catch(error => {
             console.error('An error occurred: ', error);
@@ -39,21 +55,55 @@ if (document.body.contains(loginForm)) {
     });
 
     document.getElementById('registerButton').addEventListener('click', function (event) {
-        event.preventDefault(); // Prevent the form from submitting traditionally
+        event.preventDefault();
 
-        // Gather user input from the registration form
-        const username = document.getElementById('regUsername').value
-        const password = document.getElementById('regPassword').value;
-        const email = document.getElementById('regEmail').value;
+        const username = document.getElementById('regUsername');
+        const email = document.getElementById('regEmail');
+        const password = document.getElementById('regPassword');
+        const confirmPassword = document.getElementById('regConfirmPassword');
+        const formMessage = document.getElementById('registrationError');
 
-        // Create a data object to send in the POST request
+        // Reset the form's validation
+        username.classList.remove('is-invalid');
+        email.classList.remove('is-invalid');
+        password.classList.remove('is-invalid');
+        confirmPassword.classList.remove('is-invalid');
+        formMessage.textContent = '';
+        formMessage.style.display = 'none';
+
+        // Validate the form fields
+        if (username.value.trim() === '' || email.value.trim() === '' || password.value.trim() === '' || confirmPassword.value.trim() === '') {
+            username.classList.add('is-invalid');
+            email.classList.add('is-invalid');
+            password.classList.add('is-invalid');
+            confirmPassword.classList.add('is-invalid');
+            formMessage.textContent = 'Please fill out all fields';
+            formMessage.style.display = 'block';
+            return;
+        }
+
+        // Validate the email address
+        if (!email.checkValidity()) {
+            email.classList.add('is-invalid');
+            formMessage.textContent = 'Please enter a valid email address';
+            formMessage.style.display = 'block';
+            return;
+        }
+
+        // Validate the password
+        if (password.value !== confirmPassword.value) {
+            password.classList.add('is-invalid');
+            confirmPassword.classList.add('is-invalid');
+            formMessage.textContent = 'Passwords do not match';
+            formMessage.style.display = 'block';
+            return;
+        }
+
         const data = {
-            username: username,
-            password: password,
-            email: email
+            username: username.value,
+            password: password.value,
+            email: email.value
         };
-
-        console.log(data);
 
         // Send a POST request
         fetch('http://localhost:8000/user/register', {
@@ -63,15 +113,15 @@ if (document.body.contains(loginForm)) {
             },
             body: JSON.stringify(data),
         }).then(response => {
-            if (response.status === 200) {
+            if (response.ok) {
                 // Registration was successful
                 console.log('User registered successfully.');
-                // Redirect to Blogs page
-                window.location.replace("http://localhost:8080/");
+                window.location.replace('http://localhost:8080/');
             } else {
-                // Registration failed
                 console.error('User registration failed.');
-                // You can display an error message or handle the error accordingly.
+                username.classList.add('is-invalid');
+                formMessage.textContent = 'Username already exists';
+                formMessage.style.display = 'block';
             }
         }).catch(error => {
             console.error('An error occurred: ', error);
