@@ -21,4 +21,4 @@ The web application has the following functionalities:
    - _Note_: You can also run the following command from the root directory to start the server: `uvicorn blogger.controller.controller:app --reload`
 5. Run the web server:
    - Open a terminal of your choice and run the web server: `python -m http.server -d blogger/frontend 8080`
-6. Open your browser and run the web application: <a href="http://localhost:8080/" target="blank">http://localhost:8080</a>
+6. Open your browser and run the web application: http://localhost:8080
