@@ -12,8 +12,9 @@ The web application has the following functionalities:
 # Instructions to run the Application
 1. Create a virtual environment: `python -m venv env` (You can substitute `env` with an environment name of your choice)
 2. Activate the environment:
-   1. Windows - `venv\Scripts\activate`
-   2. Mac/Linux - `source .\venv\Scripts\activate`
+   1. Windows - `env\Scripts\activate`
+   2. Mac/Linux - `source .\env\Scripts\activate`
+<br>_Note_: `env` is youe environment name.
 3. Install dependencies: `pip install -r requirements.txt`
 4. Run the backend server:
    - Run the `run-server.py` script to start the back-end server.
