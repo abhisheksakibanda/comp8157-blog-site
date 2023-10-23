@@ -18,14 +18,13 @@ fetch(`http://localhost:8000/blog/all`, {
 }).then(response => {
     if (response.ok) {
         response.json().then(data => {
-            blogsData = data; // Store the fetched data
+            blogsData = data;
 
             // Populate the dropdown list with unique categories
             populateCategories(data);
 
             // Filter and display blogs based on the selected category
             filterBlogsByCategory(data);
-
         })
     }
 });
@@ -37,7 +36,7 @@ logoutButton.addEventListener("click", () => {
     localStorage.clear();
 
     // Redirect to the login page
-    window.location.href = "http://localhost:8080/index.html"; // Update the URL to your login page
+    window.location.href = "http://localhost:8080";
 });
 
 document.getElementById("add-blog-form").addEventListener("submit", event => {
@@ -143,7 +142,7 @@ function filterBlogsByCategory(data) {
 
             const deleteButton = card.querySelector(".delete-button");
             deleteButton.addEventListener("click", (event) => {
-                event.stopPropagation(); // Prevent the card click event from firing
+                event.stopPropagation();
                 console.log(blog);
                 deleteBlogPost(blog['id']);
             });
@@ -162,7 +161,7 @@ function filterBlogsByCategory(data) {
 
 function deleteBlogPost(blogId) {
     if (confirm("Are you sure you want to delete this blog post?")) {
-        // Make a DELETE request to your server to delete the blog post
+        // Make a DELETE request to server to delete the blog post
         fetch(`http://localhost:8000/blog/${blogId}`, {
             method: 'DELETE',
             headers: {
@@ -210,7 +209,6 @@ function openEditForm(blog) {
 
         // Close the modal
         editBlogModal.hide();
-        window.ref
     });
 }
 
