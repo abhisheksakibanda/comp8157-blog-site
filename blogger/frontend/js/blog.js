@@ -4,6 +4,12 @@ const contentContainer = document.getElementById("blog-content");
 const commentsList = document.getElementById("comments-list");
 
 let name = localStorage.getItem("username");
+
+if (!name) {
+    console.log("User not logged in");
+    window.location.href = "http://localhost:8080";
+}
+
 document.getElementById("userWelcome").textContent = `Hello ${name}`;
 
 
@@ -44,7 +50,8 @@ fetch(`http://localhost:8000/blog/${blogId}`, {
                                 });
 
                                 commentItem.addEventListener("mouseenter", () => {
-                                    deleteButton.style.display = "block";
+                                    if (comment.name === localStorage.getItem("username") || blogData.author === localStorage.getItem("userId"))
+                                        deleteButton.style.display = "block";
                                 });
 
                                 commentItem.addEventListener("mouseleave", () => {

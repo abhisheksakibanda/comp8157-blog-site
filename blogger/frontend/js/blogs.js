@@ -4,6 +4,12 @@ const categoryFilter = document.getElementById("category-filter");
 
 const username = localStorage.getItem("username");
 const userId = localStorage.getItem("userId");
+
+if (!(username && userId)) {
+    console.log("User not logged in");
+    window.location.href = "http://localhost:8080";
+}
+
 welcomeText.textContent = `Hello ${username}`;
 
 console.log(username);
@@ -37,37 +43,6 @@ logoutButton.addEventListener("click", () => {
 
     // Redirect to the login page
     window.location.href = "http://localhost:8080";
-});
-
-document.getElementById("add-blog-form").addEventListener("submit", event => {
-    event.preventDefault();
-
-    const title = document.getElementById("title").value;
-    const content = document.getElementById("content").value;
-    const categories = document.getElementById("categories").value.split(",").map(category => category.trim());
-
-    const newBlogPost = {
-        title: title,
-        content: content,
-        author: username, // You can use the author's name from your stored user data
-        categories: categories,
-        creation_date: new Date().toISOString() // Use the current date and time
-    };
-
-    // Make a POST request to create the new blog post
-    fetch('http://localhost:8000/blog/post', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newBlogPost)
-    }).then(response => {
-        if (response.ok) {
-            location.reload();
-        } else {
-            console.log(response.status);
-        }
-    }).catch(error => console.log('Error creating blog post:', error));
 });
 
 function populateCategories(data) {
@@ -109,9 +84,7 @@ function filterBlogsByCategory(data) {
             const card = document.createElement("div");
             card.classList.add("col-md-4", "mb-4");
             card.innerHTML = `
-            <div class="card position-relative">
-            <button class="btn btn-sm position-absolute top-0 end-0 delete-button" style="display: none;"><i class="bi bi-x-lg text-danger"></i></button>
-            <button class="btn btn-sm position-absolute bottom-0 end-0 edit-button" style="display: none;"><i class="bi bi-pencil text-primary"></i></button>
+            <div class="card">
                 <div class="card-body">
                     <h5 class="card-title"><a href="blog.html?blogId=${blog['id']}">${blog.title}</a></h5>
                     <p class="card-text">
@@ -122,35 +95,6 @@ function filterBlogsByCategory(data) {
                 </div>
             </div>
         `;
-
-            card.addEventListener("mouseenter", () => {
-                const deleteButton = card.querySelector(".delete-button");
-                deleteButton.style.display = "block";
-
-                const editButton = card.querySelector(".edit-button");
-                editButton.style.display = "block";
-            });
-
-            // Hide the delete button when not hovering
-            card.addEventListener("mouseleave", () => {
-                const deleteButton = card.querySelector(".delete-button");
-                deleteButton.style.display = "none";
-
-                const editButton = card.querySelector(".edit-button");
-                editButton.style.display = "none";
-            });
-
-            const deleteButton = card.querySelector(".delete-button");
-            deleteButton.addEventListener("click", (event) => {
-                event.stopPropagation();
-                console.log(blog);
-                deleteBlogPost(blog['id']);
-            });
-
-            const editButton = card.querySelector(".edit-button");
-            editButton.addEventListener("click", () => {
-                openEditForm(blog); // Call a function to open the edit form with the current blog data
-            });
 
             blogContainer.appendChild(card);
         });

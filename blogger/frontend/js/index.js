@@ -39,7 +39,7 @@ if (document.body.contains(loginForm)) {
                     localStorage.setItem("username", username);
                     localStorage.setItem("userId", userId);
                     console.log("User authenticated successfully");
-                    window.location.replace("http://localhost:8080/blogs.html");
+                    window.location.replace("http://localhost:8080/dashboard.html");
                 });
             } else {
                 // Login failed
@@ -90,6 +90,22 @@ if (document.body.contains(loginForm)) {
             return;
         }
 
+        const passwordStrength = checkPasswordStrength(password.value);
+        if (passwordStrength !== 'strong') {
+            password.classList.add('is-invalid');
+            formMessage.textContent = `Password is not strong enough. ${passwordStrength}`;
+            formMessage.style.display = 'block';
+            return;
+        }
+
+        // Validate the password strength
+        if (!password.checkValidity()) {
+            password.classList.add('is-invalid');
+            formMessage.textContent = 'Password must be at least 8 characters long and contain at least one number, one lowercase letter, and one uppercase letter';
+            formMessage.style.display = 'block';
+            return;
+        }
+
         // Validate the password
         if (password.value !== confirmPassword.value) {
             password.classList.add('is-invalid');
@@ -127,4 +143,22 @@ if (document.body.contains(loginForm)) {
             console.error('An error occurred: ', error);
         });
     });
+}
+
+function checkPasswordStrength(password) {
+    const minLength = 8;
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*]/.test(password);
+
+    if (password.length < minLength) {
+        return 'Password should be at least 8 characters long.';
+    }
+
+    if (!hasUppercase || !hasLowercase || !hasNumber || !hasSpecialChar) {
+        return 'Password should contain at least one uppercase letter, one lowercase letter, one number, and one special character.';
+    }
+
+    return 'strong';
 }
