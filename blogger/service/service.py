@@ -9,7 +9,7 @@ from blogger.repository import repository
 
 
 def add_user(user_details: User):
-    username_exists = repository.get_user_details(username=user_details.username)
+    username_exists = repository.get_user(username=user_details.username)
     if username_exists:
         raise HTTPException(status_code=400, detail="Username already exists")
     user = create_user(user_details)

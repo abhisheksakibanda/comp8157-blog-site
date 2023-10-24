@@ -32,7 +32,7 @@ def add_user(user: dict):
 
 
 def get_user_details(username: str):
-    user_credentials = db_client.User.find_one({'username': username})
+    user_credentials = get_user(username=username)
 
     if not user_credentials:
         raise HTTPException(status_code=404, detail="User not found")
@@ -46,10 +46,14 @@ def get_user_details(username: str):
     )
 
 
+def get_user(username: str):
+    return db_client.User.find_one({'username': username})
+
+
 def post_blog(blog_dict: dict):
     blog_dict.pop("id")
-    db_client.BlogPost.insert_one(blog_dict)
-    return f"Blog with title '{blog_dict['title']}' posted successfully!"
+    post_result = db_client.BlogPost.insert_one(blog_dict)
+    return BlogPost(id=str(post_result.inserted_id), **blog_dict)
 
 
 def get_all_blogs(categories: List[str]):
@@ -93,7 +97,7 @@ def get_user_blogs(user_id: str):
     if not blog_posts:
         raise HTTPException(status_code=404, detail=f"Blog(s) not found for user: {user_id}")
 
-    return [BlogPost(**post) for post in list(blog_posts)]
+    return [BlogPost(id=str(post.get("_id")), **post) for post in list(blog_posts)]
 
 
 def update_blog(blog_id: str, blog_update: BlogPostUpdate):
@@ -114,13 +118,13 @@ def delete_blog(blog_id):
     if not deleted_blog:
         raise HTTPException(status_code=404, detail="Blog not found")
 
-    return BlogPost(**deleted_blog)
+    return BlogPost(id=str(deleted_blog.get("_id")), **deleted_blog)
 
 
 def post_comment(comment_dict: dict):
     comment_dict.pop("id")
-    db_client.Comment.insert_one(comment_dict)
-    return f"Comment '{comment_dict['name']}' posted successfully!"
+    insert_result = db_client.Comment.insert_one(comment_dict)
+    return Comment(id=str(insert_result.inserted_id), **comment_dict)
 
 
 def get_blog_comments(blog_id: str):
@@ -137,8 +141,7 @@ def get_blog_comments(blog_id: str):
             name=blog_comment.get("name"),
             text=blog_comment.get("text"),
             creation_date=blog_comment.get("creation_date")
-            )
-        )
+        ))
 
     return comments_list
 
@@ -149,4 +152,4 @@ def delete_comment_by_id(comment_id):
     if not deleted_comment:
         raise HTTPException(status_code=404, detail="Comment not found")
 
-    return Comment(**deleted_comment)
+    return Comment(id=str(deleted_comment.get("_id")), **deleted_comment)

@@ -21,8 +21,8 @@ if (document.body.contains(loginForm)) {
         const password = document.getElementById('loginPassword').value;
 
         const data = {
-            username: username,
-            password: password
+            username,
+            password
         };
 
         fetch('http://localhost:8000/user/authenticate', {

@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from blogger.models.blog_post import BlogPost, BlogPostUpdate
 from blogger.models.comment import Comment, CommentResponse
-from blogger.models.user import User, UserCredentials
+from blogger.models.user import User, UserCredentials, UserResponse
 from blogger.service import service
 
 tags_metadata = [
@@ -39,12 +39,12 @@ def register_user(user_details: User):
     return service.add_user(user_details=user_details)
 
 
-@app.post("/user/authenticate", tags=["User"])
+@app.post("/user/authenticate", response_model=UserResponse, tags=["User"])
 def authenticate_user(user_credentials: UserCredentials):
     return service.authenticate_user(user_credentials=user_credentials)
 
 
-@app.post("/blog/post", tags=["BlogPost"])
+@app.post("/blog/post", response_model=BlogPost, tags=["BlogPost"])
 def post_blog(blog_details: BlogPost):
     return service.post_blog(blog_details=blog_details)
 
@@ -69,12 +69,12 @@ def update_blog(blog_id: str, blog_update: BlogPostUpdate):
     return service.update_blog(blog_id=blog_id, blog_update=blog_update)
 
 
-@app.delete("/blog/{blog_id}", tags=["BlogPost"])
+@app.delete("/blog/{blog_id}", response_model=BlogPost, tags=["BlogPost"])
 def delete_blog(blog_id: str):
     return service.delete_blog(blog_id=blog_id)
 
 
-@app.post("/comment/post", tags=["Comment"])
+@app.post("/comment/post", response_model=Comment, tags=["Comment"])
 def post_comment(comment_details: Comment):
     return service.post_comment(comment_details=comment_details)
 
