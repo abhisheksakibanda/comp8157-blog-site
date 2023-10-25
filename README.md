@@ -1,6 +1,6 @@
 # Blogging Web Application (COMP-8157)
 
-A Blogging website with user authentication functionality. The application has been build with the following stack:
+A Blogging website with user authentication functionality. The application has been built with the following stack:
 
 - Front-end: HTML, JS, Bootstrap
 - Back-end: Python (FastAPI)
